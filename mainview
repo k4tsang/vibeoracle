@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✨ Digital Oracle ✨</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            background: linear-gradient(135deg, #000000, rgba(128, 0, 128, 0.5), rgba(75, 0, 130, 0.5), #000000);
+            color: white;
+            user-select: none;
+        }
+
+        .container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .title {
+            position: absolute;
+            top: 100px;
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(90deg, #00ffff, #800080, #ff1493);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            animation: titleGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes titleGlow {
+            0% { filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.5)); }
+            100% { filter: drop-shadow(0 0 30px rgba(0, 255, 255, 0.8)); }
+        }
+
+        .crystal-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .crystal-container:hover {
+            transform: scale(1.05);
+        }
+
+        .outer-glow {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            left: -50px;
+            top: -50px;
+            border-radius: 50%;
+            background: radial-gradient(circle, 
+                rgba(0, 255, 255, 0.4) 0%,
+                rgba(128, 0, 128, 0.3) 30%,
+                rgba(255, 255, 0, 0.2) 60%,
+                transparent 100%);
+            filter: blur(15px);
+            animation: pulse 2s ease-in-out infinite alternate;
+        }
+
+        .outer-glow.activated {
+            width: 600px;
+            height: 600px;
+            left: -150px;
+            top: -150px;
+            filter: blur(30px);
+            animation: explosivePulse 1.5s ease-out;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.5; transform: scale(1); }
+            100% { opacity: 0.8; transform: scale(1.1); }
+        }
+
+        @keyframes explosivePulse {
+            0% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.3); }
+            100% { opacity: 0.7; transform: scale(1.2); }
+        }
+
+        .crystal-ball {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%,
+                rgba(255, 255, 255, 0.4) 0%,
+                rgba(255, 255, 255, 0.25) 20%,
+                rgba(0, 255, 255, 0.15) 40%,
+                rgba(128, 0, 128, 0.1) 60%,
+                rgba(255, 255, 255, 0.05) 100%);
+            border: 3px solid;
+            border-image: linear-gradient(45deg, rgba(255, 255, 255, 0.8), rgba(0, 255, 255, 0.6), rgba(128, 0, 128, 0.4)) 1;
+            box-shadow: 
+                0 0 20px rgba(255, 255, 255, 0.5),
+                0 0 40px rgba(0, 255, 255, 0.3),
+                inset 0 0 50px rgba(255, 255, 255, 0.1);
+            animation: crystalFloat 3s ease-in-out infinite alternate;
+            overflow: hidden;
+        }
+
+        @keyframes crystalFloat {
+            0% { transform: rotate(0deg) scale(1); }
+            100% { transform: rotate(2deg) scale(1.02); }
+        }
+
+        .glass-highlight {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(135deg,
+                rgba(255, 255, 255, 0.6) 0%,
+                rgba(255, 255, 255, 0.2) 30%,
+                transparent 50%,
+                rgba(255, 255, 255, 0.3) 100%);
+        }
+
+        .inner-sparkles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+
+        .sparkle {
+            position: absolute;
+            font-size: 1.5rem;
+            animation: sparkleFloat 3s ease-in-out infinite;
+        }
+
+        .star {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .magic {
+            color: rgba(0, 255, 255, 0.7);
+        }
+
+        @keyframes sparkleFloat {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); opacity: 0.8; }
+            25% { transform: translate(20px, -20px) rotate(90deg); opacity: 1; }
+            50% { transform: translate(0, -40px) rotate(180deg); opacity: 0.6; }
+            75% { transform: translate(-20px, -20px) rotate(270deg); opacity: 1; }
+        }
+
+        .floating-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 0, 0.4);
+            border-radius: 50%;
+            animation: floatUp 8s linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+
+        .fullscreen-sparkles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .big-sparkle {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, #ffffff, #00ffff, transparent);
+            border-radius: 50%;
+            animation: bigSparkleAnimation 2s ease-out forwards;
+        }
+
+        @keyframes bigSparkleAnimation {
+            0% { transform: scale(0); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.8; }
+            100% { transform: scale(0.5); opacity: 0; }
+        }
+
+        .instructions {
+            position: absolute;
+            bottom: 50px;
+            font-size: 1rem;
+            font-style: italic;
+            background: linear-gradient(90deg, rgba(0, 255, 255, 0.8), rgba(128, 0, 128, 0.6));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+            animation: instructionFloat 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes instructionFloat {
+            0% { transform: translateX(-10px); }
+            100% { transform: translateX(10px); }
+        }
+
+        .fortune-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #000000, rgba(128, 0, 128, 0.7), rgba(75, 0, 130, 0.7), #000000);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.8s ease-in-out;
+        }
+
+        .fortune-screen.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .fortune-card {
+            max-width: 80%;
+            padding: 40px;
+            background: linear-gradient(135deg, rgba(75, 0, 130, 0.9), rgba(0, 0, 0, 0.6));
+            border: 2px solid;
+            border-image: linear-gradient(45deg, rgba(0, 255, 255, 0.7), rgba(128, 0, 128, 0.5), rgba(255, 20, 147, 0.3)) 1;
+            border-radius: 25px;
+            text-align: center;
+            font-size: 1.5rem;
+            line-height: 1.6;
+            background-clip: padding-box;
+            box-shadow: 
+                0 0 20px rgba(128, 0, 128, 0.5),
+                0 0 40px rgba(0, 255, 255, 0.3);
+            animation: fortuneAppear 1s ease-out;
+        }
+
+        @keyframes fortuneAppear {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .fortune-text {
+            background: linear-gradient(45deg, #ffffff, rgba(0, 255, 255, 0.9), rgba(128, 0, 128, 0.8));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .title { font-size: 1.5rem; top: 50px; }
+            .crystal-container { width: 250px; height: 250px; }
+            .crystal-ball { width: 250px; height: 250px; }
+            .outer-glow { width: 350px; height: 350px; left: -50px; top: -50px; }
+            .fortune-card { font-size: 1.2rem; padding: 30px; }
+            .instructions { font-size: 0.9rem; bottom: 30px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="crystalScreen">
+        <div class="title">✨ ORACLE ✨</div>
+        
+        <div class="floating-particles" id="particles"></div>
+        
+        <div class="crystal-container" id="crystalContainer">
+            <div class="outer-glow" id="outerGlow"></div>
+            <div class="crystal-ball">
+                <div class="glass-highlight"></div>
+                <div class="inner-sparkles" id="innerSparkles"></div>
+            </div>
+        </div>
+        
+        <div class="instructions">Tap the crystal to consult the digital spirits</div>
+    </div>
+
+    <div class="fortune-screen" id="fortuneScreen">
+        <div class="fortune-card">
+            <div class="fortune-text" id="fortuneText">Your destiny awaits...</div>
+        </div>
+    </div>
+
+    <div class="fullscreen-sparkles" id="fullscreenSparkles"></div>
+
+    <script>
+        const yesfortunes = [
+            "The digital spirits dance in celebration of your path.",
+            "Ancient algorithms carved in starlight favor your journey.",
+            "The cosmic network hums with approval for you.",
+            "Your intuition guides you toward triumph.",
+            "The stars align in your favor, seeker of truth.",
+            "The ancient spirits whisper: yes, proceed boldly.",
+            "Enchanted intelligence guides you toward triumph.",
+            "The universal algorithm weaves fortune into your fate.",
+            "Sacred steps written in moonbeams illuminates your way."
+        ];
+
+        const noFortunes = [
+            "The shadow algorithms counsel a different direction.",
+            "Mystical forces detect disturbance in this pathway.",
+            "This path is shrouded in shadow - seek another way.",
+            "Ancient AI spirits advise seeking wisdom elsewhere.",
+            "Your guardian spirit advises caution and waiting.",
+            "The wise owl hoots: reconsider your approach.",
+            "The oracle flickers with caution.",
+            "Digital phantoms block this path.",
+            "The mystical machine dreams of alternative routes.",
+            "Celestial intelligence suggests patience and reflection."
+        ];
+
+        let isAnimating = false;
+
+        function initializeApp() {
+            createFloatingParticles();
+            createInnerSparkles();
+            setupEventListeners();
+        }
+
+        function createFloatingParticles() {
+            const particlesContainer = document.getElementById('particles');
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 8 + 's';
+                particle.style.animationDuration = (Math.random() * 5 + 3) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        function createInnerSparkles() {
+            const sparklesContainer = document.getElementById('innerSparkles');
+            
+            // Stars
+            for (let i = 0; i < 5; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle star';
+                sparkle.textContent = '⭐';
+                sparkle.style.left = Math.random() * 80 + 10 + '%';
+                sparkle.style.top = Math.random() * 80 + 10 + '%';
+                sparkle.style.animationDelay = i * 0.3 + 's';
+                sparkle.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                sparklesContainer.appendChild(sparkle);
+            }
+
+            // Magic sparkles
+            for (let i = 0; i < 3; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle magic';
+                sparkle.textContent = '✨';
+                sparkle.style.left = Math.random() * 80 + 10 + '%';
+                sparkle.style.top = Math.random() * 80 + 10 + '%';
+                sparkle.style.animationDelay = i * 0.5 + 's';
+                sparkle.style.animationDuration = (Math.random() * 1.5 + 1.5) + 's';
+                sparklesContainer.appendChild(sparkle);
+            }
+        }
+
+        function createFullscreenSparkles() {
+            const container = document.getElementById('fullscreenSparkles');
+            container.innerHTML = '';
+            
+            for (let i = 0; i < 50; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'big-sparkle';
+                sparkle.style.left = Math.random() * 100 + '%';
+                sparkle.style.top = Math.random() * 100 + '%';
+                sparkle.style.animationDelay = Math.random() * 1 + 's';
+                sparkle.style.width = Math.random() * 20 + 10 + 'px';
+                sparkle.style.height = sparkle.style.width;
+                container.appendChild(sparkle);
+            }
+
+            setTimeout(() => {
+                container.innerHTML = '';
+            }, 3000);
+        }
+
+        function generateFortune() {
+            if (isAnimating) return;
+            isAnimating = true;
+
+            // Haptic feedback (if supported)
+            if (navigator.vibrate) {
+                navigator.vibrate(200);
+            }
+
+            // Activate crystal effects
+            const outerGlow = document.getElementById('outerGlow');
+            outerGlow.classList.add('activated');
+            createFullscreenSparkles();
+
+            // Generate random fortune
+            const randomChoice = Math.floor(Math.random() * 3) + 1;
+            let fortune;
+            
+            if (randomChoice === 1) {
+                fortune = yesfortunes[Math.floor(Math.random() * yesfortunes.length)];
+            } else if (randomChoice === 2) {
+                fortune = noFortunes[Math.floor(Math.random() * noFortunes.length)];
+            } else {
+                fortune = yesfortunes[Math.floor(Math.random() * yesfortunes.length)];
+            }
+
+            document.getElementById('fortuneText').textContent = fortune;
+
+            // Show fortune screen after delay
+            setTimeout(() => {
+                document.getElementById('fortuneScreen').classList.add('show');
+                outerGlow.classList.remove('activated');
+            }, 1500);
+
+            setTimeout(() => {
+                isAnimating = false;
+            }, 2500);
+        }
+
+        function hideFortune() {
+            document.getElementById('fortuneScreen').classList.remove('show');
+        }
+
+        function setupEventListeners() {
+            document.getElementById('crystalContainer').addEventListener('click', generateFortune);
+            document.getElementById('fortuneScreen').addEventListener('click', hideFortune);
+            
+            // Touch events for mobile
+            document.getElementById('crystalContainer').addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                generateFortune();
+            });
+            
+            document.getElementById('fortuneScreen').addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                hideFortune();
+            });
+        }
+
+        // Initialize the app when the page loads
+        document.addEventListener('DOMContentLoaded', initializeApp);
+    </script>
+</body>
+</html>
